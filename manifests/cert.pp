@@ -31,15 +31,15 @@
 #   Aaron Russo <arusso@berkeley.edu>
 define ssl::cert(
   $cn = $name,
-  $country = params_lookup( 'country', false ),
-  $state = params_lookup( 'state', false ),
-  $city = params_lookup( 'city', false ),
-  $org = params_lookup( 'org', false),
-  $org_unit = params_lookup( 'org_unit', false),
-  $alt_names = params_lookup( 'alt_names', false)
+  $country = hiera('ssl::cert::country'),
+  $state = hiera('ssl::cert::state'),
+  $city = hiera('ssl::cert::city'),
+  $org = hiera('ssl::cert::org'),
+  $org_unit = hiera('ssl::cert::org_unit'),
+  $alt_names = hiera('ssl::cert::alt_names'),
 ) {
+  require ::ssl::params
   include ssl
-  include ssl::params
   include ssl::package
 
   $hostname_regex = '^(?i:)(((([a-z0-9][-a-z0-9]{0,61})?[a-z0-9])[.])*([a-z][-a-z0-9]{0,61}[a-z0-9]|[a-z])[.]?)$'
