@@ -116,9 +116,12 @@ define ssl::cert(
     notify  => Exec["generate_combined_${cn}"],
     require => Exec["generate-key-${cn}"],
   }
+
+  # Generate combined PEM file
   exec { "generate-combined-${cn}":
-    refreshonly => true,
-    command     => "cat ${key_file} ${crt_file} > ${pem_file}",
+    command => "cat ${key_file} ${crt_file} > ${pem_file}",
+    creates => $pem_file,
+    require => [Exec["generate-self-${cn}"], File[$key_file]],
   }
 
   file { $pem_file:
