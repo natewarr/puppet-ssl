@@ -113,7 +113,7 @@ define ssl::cert(
     command     => "/usr/bin/openssl req -config ${cnf_file} -new -nodes \
                      -key ${key_file} -out ${crt_file} -x509",
     path    => [ '/bin', '/usr/bin' ],
-    notify  => Exec["generate_combined_${cn}"],
+    notify  => Exec["generate-combined_${cn}"],
     require => Exec["generate-key-${cn}"],
   }
 
