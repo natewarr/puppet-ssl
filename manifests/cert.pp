@@ -59,6 +59,7 @@ define ssl::cert(
   $cnf_file = "${ssl::params::crt_dir}/meta/${cn}.cnf"
   $key_file = "${ssl::params::key_dir}/${cn}.key"
   $crt_file = "${ssl::params::crt_dir}/${cn}.crt"
+  $pem_file = "${ssl::params::pem_dir}/${cn}.pem"
   $csr_file = "${ssl::params::crt_dir}/meta/${cn}.csr"
   $csrh_file = "${ssl::params::crt_dir}/meta/${cn}.csrh"
 
@@ -111,8 +112,21 @@ define ssl::cert(
     creates     => $crt_file,
     command     => "/usr/bin/openssl req -config ${cnf_file} -new -nodes \
                      -key ${key_file} -out ${crt_file} -x509",
-    path        => [ '/bin', '/usr/bin' ],
-    require     => Exec["generate-key-${cn}"],
+    path    => [ '/bin', '/usr/bin' ],
+    notify  => Exec["generate_combined_${cn}"],
+    require => Exec["generate-key-${cn}"],
+  }
+  exec { "generate-combined-${cn}":
+    refreshonly => true,
+    command     => "cat ${key_file} ${crt_file} > ${pem_file}",
+  }
+
+  file { $pem_file:
+    ensure  => file,
+    owner   => 'root',
+    group   => 'root',
+    mode    => '0600',
+    require => Exec["generate-combined-${cn}"]
   }
 
   exec { "generate-csrh-${cn}":

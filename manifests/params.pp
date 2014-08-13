@@ -7,16 +7,19 @@ class ssl::params {
       $package = 'openssl'
       $crt_dir = '/etc/pki/tls/certs'
       $key_dir = '/etc/pki/tls/private'
+      $pem_dir = '/etc/pki/tls/private'
     }
     'Debian': {
       $package = 'openssl'
       $crt_dir = '/etc/ssl/certs'
       $key_dir = '/etc/ssl/private'
+      $pem_dir = '/etc/ssl/private'
     }
     'Archlinux': {
       $package = 'openssl'
       $crt_dir = '/etc/ssl/certs'
       $key_dir = '/etc/ssl/private'
+      $pem_dir = '/etc/ssl/private'
     }
     default: {
       fail("\$::osfamily = '${::osfamily}' not supported!")
