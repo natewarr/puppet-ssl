@@ -121,6 +121,7 @@ define ssl::cert(
   exec { "generate-combined-${cn}":
     command => "cat ${key_file} ${crt_file} > ${pem_file}",
     creates => $pem_file,
+    path    => [ '/bin', '/usr/bin' ],
     require => [Exec["generate-self-${cn}"], File[$key_file]],
   }
 
